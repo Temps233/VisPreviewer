@@ -1,4 +1,5 @@
 import tkinter as tk, easygui as eg
+import tkinter.ttk as ttk
 from .vispreviewer import VisPreviewer, null
 import threading
 
@@ -12,8 +13,9 @@ class VisUI:
         self.root = tk.Tk()    
         self.terminal = tk.Text(self.root)
         self.error = tk.Text(self.root)
-        self.cost_var = tk.StringVar(self.root, str(self.now_cost))
-        self.cost_display = tk.Label(self.root, textvariable=self.cost_var)
+        self.step_button = ttk.Button()
+        self.cost_var = tk.StringVar(self.root, str("Duration: "+self.now_cost))
+        self.cost_display = ttk.Label(self.root, textvariable=self.cost_var)
         ############### Evaluate Part ###############
         self._previewer = VisPreviewer(fn, code, self)
         self.terminal_update_thread = threading.Thread(target=self.update_terminal)
@@ -22,7 +24,10 @@ class VisUI:
         # INITIALIZATION SECTION
         #############################################
         self.terminal.pack(side='top')
+        self.error.pack(side='left')
+        self.cost_display.pack(side='bottom')
         self.terminal_update_thread.start()
+        self.root.mainloop()
 
     def update_terminal(self):
         while True:
